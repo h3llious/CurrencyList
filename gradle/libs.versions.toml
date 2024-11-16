@@ -10,7 +10,6 @@ activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 appcompat = "1.7.0"
 material = "1.12.0"
-jetbrainsKotlinJvm = "2.0.21"
 hilt = "2.52"
 ksp = "2.0.21-1.0.27"
 hilt-navigation-compose = "1.2.0"
@@ -18,6 +17,7 @@ kotlinx-coroutines-android = "1.9.0"
 lifecycle = "2.8.7"
 android-navigation = "2.8.4"
 kotlinx-serialization = "1.7.3"
+kotlinx-collections-immutable = "0.3.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +46,7 @@ lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "android-navigation" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "android-navigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

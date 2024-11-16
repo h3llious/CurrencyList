@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.nhatbui.currency.ui.theme.CurrencyTheme
+import com.nhatbui.common.ui.theme.CurrencyTheme
 
 class CurrencyListFragment : Fragment() {
     override fun onCreateView(

@@ -1,4 +1,4 @@
-package com.nhatbui.currency.ui.theme
+package com.nhatbui.common.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -8,6 +8,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -49,9 +50,23 @@ fun CurrencyTheme(
         else -> LightColorScheme
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalDimension provides LocalDimension.current,
+        LocalIcon provides LocalIcon.current
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
+}
+
+object CurrencyTheme {
+    val dimensions: CurrencyListDimensions
+        @Composable
+        get() = LocalDimension.current
+    val icons: IconResourceProvider
+        @Composable
+        get() = LocalIcon.current
 }

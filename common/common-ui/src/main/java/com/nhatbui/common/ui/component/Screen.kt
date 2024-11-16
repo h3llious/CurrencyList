@@ -1,4 +1,4 @@
-package com.nhatbui.common.ui
+package com.nhatbui.common.ui.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
