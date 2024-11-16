@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.nhatbui.currency.ui.Greeting
+import com.nhatbui.currency.ui.CurrencyScreen
 import com.nhatbui.currencylist.ui.theme.CurrencyListTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,8 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CurrencyListTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    CurrencyScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
