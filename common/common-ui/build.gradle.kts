@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nhatbui.currency.ui"
+    namespace = "com.nhatbui.common.ui"
 
     buildTypes {
         release {
@@ -22,21 +22,13 @@ android {
 }
 
 dependencies {
-    implementation(projects.currency.currencyPresentation)
     implementation(projects.common.commonPresentation)
-    implementation(projects.common.commonUi)
 
-    // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.compose.material3)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.ui.tooling)
-
-    // DI
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    testImplementation(libs.junit)
 }

@@ -3,11 +3,9 @@ plugins {
 }
 
 android {
-    namespace = "com.nhatbui.currency.domain"
+    namespace = "com.nhatbui.common.domain"
 }
 
 dependencies {
-    implementation(projects.common.commonDomain)
-
     implementation(libs.kotlinx.coroutines.android)
 }

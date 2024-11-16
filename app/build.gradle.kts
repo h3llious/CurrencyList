@@ -46,6 +46,8 @@ dependencies {
     implementation(projects.currency.currencyDomain)
     implementation(projects.currency.currencyData)
 
+    implementation(projects.common.commonDomain)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

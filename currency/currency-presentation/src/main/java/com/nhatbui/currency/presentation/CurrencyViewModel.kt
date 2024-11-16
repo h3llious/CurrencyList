@@ -1,13 +1,25 @@
 package com.nhatbui.currency.presentation
 
-import androidx.lifecycle.ViewModel
+import com.nhatbui.common.domain.UseCaseExecutorProvider
+import com.nhatbui.common.presentation.BaseViewModel
+import com.nhatbui.currency.domain.ExampleUseCase
+import com.nhatbui.currency.presentation.model.CurrencyPresentationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(
-
-): ViewModel() {
-    // TODO temp test Hilt impl
-    val name = "Android"
+    private val exampleUseCase: ExampleUseCase,
+    useCaseExecutorProvider: UseCaseExecutorProvider
+): BaseViewModel<CurrencyPresentationState>(
+    useCaseExecutorProvider,
+    CurrencyPresentationState()
+) {
+    fun getExampleName() {
+        exampleUseCase.start(
+            onResult = { result ->
+                updateState { lastState -> lastState.copy(name = result) }
+            }
+        )
+    }
 }

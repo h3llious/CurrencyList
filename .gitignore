@@ -1,6 +1,9 @@
 build/
 .idea/
 
+# Kotlin
+.kotlin
+
 *.iml
 .gradle
 /local.properties
