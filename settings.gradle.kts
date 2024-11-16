@@ -19,5 +19,11 @@ dependencyResolutionManagement {
     }
 }
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 rootProject.name = "CurrencyList"
 include(":app")
+include(":currency:currency-ui")
+include(":currency:currency-presentation")
+include(":currency:currency-domain")
+include(":currency:currency-data")
