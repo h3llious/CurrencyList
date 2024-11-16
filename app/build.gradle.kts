@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.currencylist.hilt.library)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -47,6 +48,12 @@ dependencies {
     implementation(projects.currency.currencyData)
 
     implementation(projects.common.commonDomain)
+
+    // Navigation
+    implementation(libs.navigation.fragment.ktx)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.appcompat)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

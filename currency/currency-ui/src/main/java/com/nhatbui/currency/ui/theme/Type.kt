@@ -1,4 +1,4 @@
-package com.nhatbui.currencylist.ui.theme
+package com.nhatbui.currency.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

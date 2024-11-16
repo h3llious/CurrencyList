@@ -1,4 +1,4 @@
-package com.nhatbui.currencylist.ui.theme
+package com.nhatbui.currency.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
