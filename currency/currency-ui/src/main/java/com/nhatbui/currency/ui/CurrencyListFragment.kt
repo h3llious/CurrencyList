@@ -15,7 +15,9 @@ class CurrencyListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            CurrencyTheme {
+            CurrencyTheme(
+                dynamicColor = false
+            ) {
                 FeatureContent()
             }
         }

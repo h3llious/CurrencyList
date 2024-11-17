@@ -13,14 +13,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nhatbui.common.ui.component.Screen
@@ -70,13 +69,16 @@ private fun CurrencyItem(item: CurrencyUiModel, modifier: Modifier = Modifier) {
     ) {
         Box(
             modifier = Modifier
-                .size(40.dp)
-                .background(color = Color.DarkGray, shape = CircleShape),
+                .size(36.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.secondary,
+                    shape = RoundedCornerShape(CurrencyTheme.dimensions.spacingLarge)
+                ),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = item.iconInitial,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onSecondary,
                 style = MaterialTheme.typography.labelLarge
             )
         }
@@ -85,23 +87,23 @@ private fun CurrencyItem(item: CurrencyUiModel, modifier: Modifier = Modifier) {
             Text(
                 modifier = Modifier.basicMarquee(),
                 text = item.name,
-                color = Color.DarkGray,
+                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodyLarge,
                 maxLines = 1
             )
         }
         if (item is Crypto) {
+            Spacer(modifier = Modifier.width(CurrencyTheme.dimensions.spacingMedium))
             Text(
-                modifier = Modifier.padding(start = CurrencyTheme.dimensions.spacingMedium),
                 text = item.symbol,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.DarkGray
+                color = MaterialTheme.colorScheme.secondary
             )
+            Spacer(modifier = Modifier.width(CurrencyTheme.dimensions.spacingMedium))
             Icon(
-                modifier = Modifier
-                    .padding(start = CurrencyTheme.dimensions.spacingMedium)
-                    .size(CurrencyTheme.dimensions.spacingMedium),
+                modifier = Modifier.size(CurrencyTheme.dimensions.spacingMedium),
                 painter = painterResource(CurrencyTheme.icons.iconRightArrow),
+                tint = MaterialTheme.colorScheme.tertiary,
                 contentDescription = null
             )
         }
