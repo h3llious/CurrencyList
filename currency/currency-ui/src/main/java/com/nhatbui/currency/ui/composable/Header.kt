@@ -67,7 +67,7 @@ private fun SearchIcon(
         Icon(
             painter = painterResource(R.drawable.ic_search),
             tint = MaterialTheme.colorScheme.secondary,
-            contentDescription = null
+            contentDescription = stringResource(R.string.search_content_description)
         )
     }
 }
@@ -85,7 +85,7 @@ private fun FilterIcon(
             .size(CurrencyTheme.dimensions.spacingLarge),
         painter = painterResource(R.drawable.ic_filter),
         tint = MaterialTheme.colorScheme.secondary,
-        contentDescription = null
+        contentDescription = stringResource(R.string.filter_content_description)
     )
 }
 
@@ -102,6 +102,6 @@ private fun SettingsIcon(
             .size(CurrencyTheme.dimensions.spacingLarge),
         painter = painterResource(R.drawable.ic_settings),
         tint = MaterialTheme.colorScheme.secondary,
-        contentDescription = null
+        contentDescription = stringResource(R.string.settings_content_description)
     )
 }

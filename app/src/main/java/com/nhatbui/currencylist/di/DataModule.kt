@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.nhatbui.common.data.AssetToDataMapper
+import com.nhatbui.common.domain.CoroutineContextProvider
 import com.nhatbui.currency.data.local.CurrencyDao
 import com.nhatbui.currency.data.local.CurrencyDatabase
 import com.nhatbui.currency.data.local.DATABASE_NAME
@@ -52,10 +53,12 @@ object DataModule {
     fun providesCurrencyRepository(
         currencyDao: CurrencyDao,
         assetToDataMapper: AssetToDataMapper<List<CurrencyDataModel>>,
-        currencyDataModelToDomainMapper: CurrencyDataModelToDomainMapper
+        currencyDataModelToDomainMapper: CurrencyDataModelToDomainMapper,
+        coroutineContextProvider: CoroutineContextProvider
     ): CurrencyRepository = CurrencyRepositoryImpl(
         currencyDao,
         assetToDataMapper,
-        currencyDataModelToDomainMapper
+        currencyDataModelToDomainMapper,
+        coroutineContextProvider
     )
 }

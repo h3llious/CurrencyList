@@ -5,4 +5,13 @@
     <string name="currency_type_all_label">All currencies</string>
     <string name="action_insert_currencies_label">Insert currencies</string>
     <string name="action_clear_currencies_label">Clear currencies</string>
+    <string name="search_bar_placeholder">Search</string>
+
+    <string name="right_arrow_content_description">Right arrow</string>
+    <string name="selected_content_description">Selected</string>
+    <string name="filter_content_description">Filter</string>
+    <string name="search_content_description">Search</string>
+    <string name="settings_content_description">Settings</string>
+    <string name="back_content_description">Back</string>
+    <string name="clear_content_description">Clear</string>
 </resources>

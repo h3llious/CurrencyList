@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nhatbui.common.ui.theme.CurrencyTheme
+import com.nhatbui.currency.ui.R
 import com.nhatbui.currency.ui.model.CurrencyTypeUiModel
 import com.nhatbui.currency.ui.model.CurrencyTypeUiModel.Crypto
 import com.nhatbui.currency.ui.model.CurrencyTypeUiModel.Fiat
@@ -80,7 +81,7 @@ private fun FilterMenuItem(
                 modifier = Modifier.size(36.dp),
                 painter = painterResource(CurrencyTheme.icons.iconCheck),
                 tint = MaterialTheme.colorScheme.surfaceTint,
-                contentDescription = null
+                contentDescription = stringResource(R.string.selected_content_description)
             )
         }
     }

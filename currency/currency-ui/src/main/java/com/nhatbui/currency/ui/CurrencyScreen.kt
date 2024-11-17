@@ -1,5 +1,6 @@
 package com.nhatbui.currency.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nhatbui.common.ui.component.Screen
 import com.nhatbui.common.ui.theme.CurrencyTheme
@@ -35,6 +38,7 @@ import com.nhatbui.currency.presentation.model.CurrencyPresentationState
 import com.nhatbui.currency.presentation.model.CurrencyTypePresentationModel
 import com.nhatbui.currency.ui.composable.FilterBottomSheet
 import com.nhatbui.currency.ui.composable.Header
+import com.nhatbui.currency.ui.composable.SearchBar
 import com.nhatbui.currency.ui.composable.SettingsBottomSheet
 import com.nhatbui.currency.ui.di.CurrencyDependencies
 import com.nhatbui.currency.ui.model.CurrencyTypeUiModel
@@ -50,6 +54,8 @@ internal fun CurrencyDependencies.CurrencyScreen() =
     Screen<CurrencyPresentationState, CurrencyViewModel> {
         var showFilterBottomSheet by remember { mutableStateOf(false) }
         var showSettingsBottomSheet by remember { mutableStateOf(false) }
+        var showSearchBar by remember { mutableStateOf(false) }
+        var searchText by remember { mutableStateOf("") }
         LaunchedEffect(Unit) {
             viewModel.getCurrencies(CurrencyTypePresentationModel.All)
         }
@@ -61,9 +67,17 @@ internal fun CurrencyDependencies.CurrencyScreen() =
             CurrencyScreenContent(
                 currencyType = currencyType,
                 currencies = currencies.toImmutableList(),
+                isSearching = showSearchBar,
                 onSettingsClick = { showSettingsBottomSheet = true },
                 onFilterClick = { showFilterBottomSheet = true },
-                onSearchClick = {}
+                onSearchClick = { showSearchBar = true },
+                onSearchCancel = {
+                    showSearchBar = false
+                    searchText = ""
+                },
+                onSearching = { searchingValue ->
+                    searchText = searchingValue
+                }
             )
             FilterBottomSheet(
                 shouldShowBottomSheet = showFilterBottomSheet,
@@ -90,19 +104,35 @@ internal fun CurrencyDependencies.CurrencyScreen() =
 private fun CurrencyScreenContent(
     currencies: ImmutableList<CurrencyUiModel>,
     currencyType: CurrencyTypeUiModel,
+    isSearching: Boolean,
     onSearchClick: () -> Unit,
     onFilterClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onSearchCancel: () -> Unit,
+    onSearching: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        Header(
-            modifier = Modifier.padding(CurrencyTheme.dimensions.spacingMedium),
-            currencyType = currencyType,
-            onFilterClick = onFilterClick,
-            onSearchClick = onSearchClick,
-            onSettingsClick = onSettingsClick
-        )
+        AnimatedVisibility(!isSearching) {
+            Header(
+                modifier = Modifier
+                    .padding(horizontal = CurrencyTheme.dimensions.spacingMedium)
+                    .height(60.dp),
+                currencyType = currencyType,
+                onFilterClick = onFilterClick,
+                onSearchClick = onSearchClick,
+                onSettingsClick = onSettingsClick
+            )
+        }
+        AnimatedVisibility(isSearching) {
+            SearchBar(
+                modifier = Modifier
+                    .padding(horizontal = CurrencyTheme.dimensions.spacingMedium)
+                    .height(60.dp),
+                onBackAction = onSearchCancel,
+                onValueChange = onSearching
+            )
+        }
         LazyColumn(
             state = rememberLazyListState()
         ) {
@@ -161,7 +191,7 @@ private fun CurrencyItem(item: CurrencyUiModel, modifier: Modifier = Modifier) {
                 modifier = Modifier.size(CurrencyTheme.dimensions.spacingMedium),
                 painter = painterResource(CurrencyTheme.icons.iconRightArrow),
                 tint = MaterialTheme.colorScheme.tertiary,
-                contentDescription = null
+                contentDescription = stringResource(R.string.right_arrow_content_description)
             )
         }
     }

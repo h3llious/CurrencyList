@@ -1,6 +1,7 @@
 package com.nhatbui.currency.data.repository
 
 import com.nhatbui.common.data.AssetToDataMapper
+import com.nhatbui.common.domain.CoroutineContextProvider
 import com.nhatbui.currency.data.local.CurrencyDao
 import com.nhatbui.currency.data.mapper.CurrencyDataModelToDomainMapper
 import com.nhatbui.currency.data.model.CurrencyDataModel
@@ -20,13 +21,14 @@ import kotlinx.coroutines.flow.map
 class CurrencyRepositoryImpl(
     private val currencyDao: CurrencyDao,
     private val assetToDataMapper: AssetToDataMapper<List<CurrencyDataModel>>,
-    private val currencyDataModelToDomainMapper: CurrencyDataModelToDomainMapper
+    private val currencyDataModelToDomainMapper: CurrencyDataModelToDomainMapper,
+    private val coroutineContextProvider: CoroutineContextProvider
 ) : CurrencyRepository {
     override suspend fun insertCurrencies() {
         val (cryptoCurrencies, fiatCurrencies) = coroutineScope {
             awaitAll(
-                async { assetToDataMapper.getDataFromJson("crypto-currency.json") },
-                async { assetToDataMapper.getDataFromJson("fiat-currency.json") }
+                async(coroutineContextProvider.default) { assetToDataMapper.getDataFromJson("crypto-currency.json") },
+                async(coroutineContextProvider.default) { assetToDataMapper.getDataFromJson("fiat-currency.json") }
             )
         }
         currencyDao.insertAll(cryptoCurrencies + fiatCurrencies)
