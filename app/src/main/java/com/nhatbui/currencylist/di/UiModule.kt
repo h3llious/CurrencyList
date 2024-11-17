@@ -3,6 +3,7 @@ package com.nhatbui.currencylist.di
 import com.nhatbui.currency.ui.di.CurrencyDependencies
 import com.nhatbui.currency.ui.di.NavHostDependencies
 import com.nhatbui.currency.ui.mapper.CurrencyPresentationToUiMapper
+import com.nhatbui.currency.ui.mapper.EmptyCurrencyUiResolver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,9 +16,13 @@ object UiModule {
     fun providesCurrencyPresentationToUiMapper() = CurrencyPresentationToUiMapper()
 
     @Provides
+    fun providesEmptyCurrencyUiResolver() = EmptyCurrencyUiResolver()
+
+    @Provides
     fun providesCurrencyDependencies(
-        currencyPresentationToUiMapper: CurrencyPresentationToUiMapper
-    ) = CurrencyDependencies(currencyPresentationToUiMapper)
+        currencyPresentationToUiMapper: CurrencyPresentationToUiMapper,
+        emptyCurrencyUiResolver: EmptyCurrencyUiResolver
+    ) = CurrencyDependencies(currencyPresentationToUiMapper, emptyCurrencyUiResolver)
 
     @Provides
     fun providesNavHostDependencies(

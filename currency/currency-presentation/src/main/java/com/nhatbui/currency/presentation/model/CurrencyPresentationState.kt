@@ -4,8 +4,6 @@ import com.nhatbui.common.presentation.PresentationState
 import com.nhatbui.currency.presentation.model.CurrencyTypePresentationModel.All
 
 data class CurrencyPresentationState(
-    val isError: Boolean = false,
-    val isLoading: Boolean = false,
     val currencies: List<CurrencyPresentationModel> = emptyList(),
     val currencyType: CurrencyTypePresentationModel = All
 ) : PresentationState

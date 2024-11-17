@@ -6,6 +6,11 @@
     <string name="action_insert_currencies_label">Insert currencies</string>
     <string name="action_clear_currencies_label">Clear currencies</string>
     <string name="search_bar_placeholder">Search</string>
+    <string name="empty_search_text_description">No Results</string>
+    <string name="empty_search_text_suggestion_crypto">Try \"CRO\"</string>
+    <string name="empty_search_text_suggestion_fiat">Try \"Dollar\"</string>
+    <string name="empty_currencies_text_description">No currencies</string>
+    <string name="empty_currencies_text_suggestion">Let\'s insert more</string>
 
     <string name="right_arrow_content_description">Right arrow</string>
     <string name="selected_content_description">Selected</string>
