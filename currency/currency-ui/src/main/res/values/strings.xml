@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="currency_type_crypto_label">Crypto</string>
+    <string name="currency_type_fiat_label">Fiat</string>
+    <string name="currency_type_all_label">All currencies</string>
+</resources>

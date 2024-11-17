@@ -7,4 +7,5 @@ internal val LocalIcon = staticCompositionLocalOf { IconResourceProvider() }
 
 class IconResourceProvider {
     val iconRightArrow = R.drawable.ic_right_arrow
+    val iconCheck = R.drawable.ic_check
 }

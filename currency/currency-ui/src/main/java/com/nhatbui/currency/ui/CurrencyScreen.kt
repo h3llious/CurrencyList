@@ -14,11 +14,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,39 +32,73 @@ import com.nhatbui.common.ui.component.Screen
 import com.nhatbui.common.ui.theme.CurrencyTheme
 import com.nhatbui.currency.presentation.CurrencyViewModel
 import com.nhatbui.currency.presentation.model.CurrencyPresentationState
-import com.nhatbui.currency.presentation.model.CurrencyRequestPresentationModel
+import com.nhatbui.currency.presentation.model.CurrencyTypePresentationModel
+import com.nhatbui.currency.ui.composable.FilterBottomSheet
+import com.nhatbui.currency.ui.composable.Header
 import com.nhatbui.currency.ui.di.CurrencyDependencies
+import com.nhatbui.currency.ui.model.CurrencyTypeUiModel
 import com.nhatbui.currency.ui.model.CurrencyUiModel
 import com.nhatbui.currency.ui.model.CurrencyUiModel.Crypto
+import com.nhatbui.currency.ui.model.toPresentation
+import com.nhatbui.currency.ui.model.toUi
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun CurrencyDependencies.CurrencyScreen() =
+internal fun CurrencyDependencies.CurrencyScreen() {
+    var showFilterBottomSheet by remember { mutableStateOf(false) }
     Screen<CurrencyPresentationState, CurrencyViewModel> {
         LaunchedEffect(Unit) {
             viewModel.insertCurrencies()
-            viewModel.getCurrencies(CurrencyRequestPresentationModel.All)
+            viewModel.getCurrencies(CurrencyTypePresentationModel.All)
         }
         Content { viewState ->
-            val currencies = viewState.currencies.map(currencyPresentationToUiMapper::map)
+            val currencies = remember(viewState.currencies) {
+                viewState.currencies.map(currencyPresentationToUiMapper::map)
+            }
+            val currencyType = remember(viewState.currencyType) { viewState.currencyType.toUi() }
             CurrencyScreenContent(
-                currencies = currencies.toImmutableList()
+                currencyType = currencyType,
+                currencies = currencies.toImmutableList(),
+                onSettingsClick = {},
+                onFilterClick = { showFilterBottomSheet = true },
+                onSearchClick = {}
+            )
+            FilterBottomSheet(
+                shouldShowBottomSheet = showFilterBottomSheet,
+                onDismiss = { showFilterBottomSheet = false },
+                onSelectType = { type ->
+                    viewModel.getCurrencies(type.toPresentation())
+                },
+                currentSelectedType = currencyType
             )
         }
     }
+}
 
 @Composable
 private fun CurrencyScreenContent(
     currencies: ImmutableList<CurrencyUiModel>,
+    currencyType: CurrencyTypeUiModel,
+    onSearchClick: () -> Unit,
+    onFilterClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier,
-        state = rememberLazyListState()
-    ) {
-        itemsIndexed(currencies) { _, currency ->
-            CurrencyItem(currency)
+    Column(modifier = modifier) {
+        Header(
+            modifier = Modifier.padding(CurrencyTheme.dimensions.spacingMedium),
+            currencyType = currencyType,
+            onFilterClick = onFilterClick,
+            onSearchClick = onSearchClick,
+            onSettingsClick = onSettingsClick
+        )
+        LazyColumn(
+            state = rememberLazyListState()
+        ) {
+            itemsIndexed(currencies) { _, currency ->
+                CurrencyItem(currency)
+            }
         }
     }
 }
@@ -116,4 +155,5 @@ private fun CurrencyItem(item: CurrencyUiModel, modifier: Modifier = Modifier) {
             )
         }
     }
+    HorizontalDivider(color = MaterialTheme.colorScheme.tertiary)
 }

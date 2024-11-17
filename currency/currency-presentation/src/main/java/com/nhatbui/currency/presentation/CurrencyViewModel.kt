@@ -8,7 +8,7 @@ import com.nhatbui.currency.domain.usecase.InsertCurrenciesUseCase
 import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.CurrenciesInserted
 import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.InsertFailed
 import com.nhatbui.currency.presentation.model.CurrencyPresentationState
-import com.nhatbui.currency.presentation.model.CurrencyRequestPresentationModel
+import com.nhatbui.currency.presentation.model.CurrencyTypePresentationModel
 import com.nhatbui.currency.presentation.model.toDomain
 import com.nhatbui.currency.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +37,7 @@ class CurrencyViewModel @Inject constructor(
         )
     }
 
-    fun getCurrencies(request: CurrencyRequestPresentationModel) {
+    fun getCurrencies(request: CurrencyTypePresentationModel) {
         getCurrenciesJob?.cancel()
         getCurrenciesJob = getCurrenciesUseCase.start(
             value = request.toDomain(),
@@ -46,7 +46,8 @@ class CurrencyViewModel @Inject constructor(
                     lastState.copy(
                         currencies = currencies.map(
                             CurrencyDomainModel::toPresentation
-                        )
+                        ),
+                        currencyType = request
                     )
                 }
             }
