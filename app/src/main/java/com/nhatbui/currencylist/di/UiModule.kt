@@ -6,16 +6,16 @@ import com.nhatbui.currency.ui.mapper.CurrencyPresentationToUiMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.FragmentComponent
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(FragmentComponent::class)
 object UiModule {
     @Provides
     fun providesCurrencyPresentationToUiMapper() = CurrencyPresentationToUiMapper()
 
     @Provides
-    fun providesCCurrencyDependencies(
+    fun providesCurrencyDependencies(
         currencyPresentationToUiMapper: CurrencyPresentationToUiMapper
     ) = CurrencyDependencies(currencyPresentationToUiMapper)
 

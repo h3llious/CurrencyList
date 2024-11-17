@@ -35,6 +35,7 @@ import com.nhatbui.currency.presentation.model.CurrencyPresentationState
 import com.nhatbui.currency.presentation.model.CurrencyTypePresentationModel
 import com.nhatbui.currency.ui.composable.FilterBottomSheet
 import com.nhatbui.currency.ui.composable.Header
+import com.nhatbui.currency.ui.composable.SettingsBottomSheet
 import com.nhatbui.currency.ui.di.CurrencyDependencies
 import com.nhatbui.currency.ui.model.CurrencyTypeUiModel
 import com.nhatbui.currency.ui.model.CurrencyUiModel
@@ -45,11 +46,11 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun CurrencyDependencies.CurrencyScreen() {
-    var showFilterBottomSheet by remember { mutableStateOf(false) }
+internal fun CurrencyDependencies.CurrencyScreen() =
     Screen<CurrencyPresentationState, CurrencyViewModel> {
+        var showFilterBottomSheet by remember { mutableStateOf(false) }
+        var showSettingsBottomSheet by remember { mutableStateOf(false) }
         LaunchedEffect(Unit) {
-            viewModel.insertCurrencies()
             viewModel.getCurrencies(CurrencyTypePresentationModel.All)
         }
         Content { viewState ->
@@ -60,7 +61,7 @@ internal fun CurrencyDependencies.CurrencyScreen() {
             CurrencyScreenContent(
                 currencyType = currencyType,
                 currencies = currencies.toImmutableList(),
-                onSettingsClick = {},
+                onSettingsClick = { showSettingsBottomSheet = true },
                 onFilterClick = { showFilterBottomSheet = true },
                 onSearchClick = {}
             )
@@ -72,9 +73,18 @@ internal fun CurrencyDependencies.CurrencyScreen() {
                 },
                 currentSelectedType = currencyType
             )
+            SettingsBottomSheet(
+                shouldShowBottomSheet = showSettingsBottomSheet,
+                onDismiss = { showSettingsBottomSheet = false },
+                onInsertCurrencies = {
+                    viewModel.onInsertCurrencies()
+                },
+                onClearCurrencies = {
+                    viewModel.onClearCurrencies()
+                }
+            )
         }
     }
-}
 
 @Composable
 private fun CurrencyScreenContent(

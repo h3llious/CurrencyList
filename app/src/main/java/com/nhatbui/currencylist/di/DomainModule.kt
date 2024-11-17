@@ -2,6 +2,8 @@ package com.nhatbui.currencylist.di
 
 import com.nhatbui.common.domain.CoroutineContextProvider
 import com.nhatbui.currency.domain.repository.CurrencyRepository
+import com.nhatbui.currency.domain.usecase.ClearCurrenciesUseCase
+import com.nhatbui.currency.domain.usecase.ClearCurrenciesUseCaseImpl
 import com.nhatbui.currency.domain.usecase.GetCurrenciesUseCase
 import com.nhatbui.currency.domain.usecase.GetCurrenciesUseCaseImpl
 import com.nhatbui.currency.domain.usecase.InsertCurrenciesUseCase
@@ -25,4 +27,10 @@ object DomainModule {
         repository: CurrencyRepository,
         coroutineContextProvider: CoroutineContextProvider
     ): InsertCurrenciesUseCase = InsertCurrenciesUseCaseImpl(repository, coroutineContextProvider)
+
+    @Provides
+    fun providesClearCurrenciesUseCase(
+        repository: CurrencyRepository,
+        coroutineContextProvider: CoroutineContextProvider
+    ): ClearCurrenciesUseCase = ClearCurrenciesUseCaseImpl(repository, coroutineContextProvider)
 }

@@ -3,4 +3,6 @@
     <string name="currency_type_crypto_label">Crypto</string>
     <string name="currency_type_fiat_label">Fiat</string>
     <string name="currency_type_all_label">All currencies</string>
+    <string name="action_insert_currencies_label">Insert currencies</string>
+    <string name="action_clear_currencies_label">Clear currencies</string>
 </resources>

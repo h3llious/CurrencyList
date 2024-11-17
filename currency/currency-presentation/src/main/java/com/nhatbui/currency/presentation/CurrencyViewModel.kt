@@ -2,9 +2,14 @@ package com.nhatbui.currency.presentation
 
 import com.nhatbui.common.domain.UseCaseExecutorProvider
 import com.nhatbui.common.presentation.BaseViewModel
+import com.nhatbui.currency.domain.model.CurrenciesDomainException.EmptyCurrenciesDomainException
 import com.nhatbui.currency.domain.model.CurrencyDomainModel
+import com.nhatbui.currency.domain.usecase.ClearCurrenciesUseCase
 import com.nhatbui.currency.domain.usecase.GetCurrenciesUseCase
 import com.nhatbui.currency.domain.usecase.InsertCurrenciesUseCase
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.ClearFailed
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.ClearFailedEmptyCurrencies
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.CurrenciesCleared
 import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.CurrenciesInserted
 import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.InsertFailed
 import com.nhatbui.currency.presentation.model.CurrencyPresentationState
@@ -19,6 +24,7 @@ import javax.inject.Inject
 class CurrencyViewModel @Inject constructor(
     private val getCurrenciesUseCase: GetCurrenciesUseCase,
     private val insertCurrenciesUseCase: InsertCurrenciesUseCase,
+    private val clearCurrenciesUseCase: ClearCurrenciesUseCase,
     useCaseExecutorProvider: UseCaseExecutorProvider
 ) : BaseViewModel<CurrencyPresentationState>(
     useCaseExecutorProvider,
@@ -26,13 +32,27 @@ class CurrencyViewModel @Inject constructor(
 ) {
     private var getCurrenciesJob: Job? = null
 
-    fun insertCurrencies() {
+    fun onInsertCurrencies() {
         insertCurrenciesUseCase.start(
             onResult = {
                 sendEvent(CurrenciesInserted)
             },
             onError = {
                 sendEvent(InsertFailed)
+            }
+        )
+    }
+
+    fun onClearCurrencies() {
+        clearCurrenciesUseCase.start(
+            onResult = {
+                sendEvent(CurrenciesCleared)
+            },
+            onError = { exception ->
+                when (exception) {
+                    is EmptyCurrenciesDomainException -> sendEvent(ClearFailedEmptyCurrencies)
+                    else -> sendEvent(ClearFailed)
+                }
             }
         )
     }
