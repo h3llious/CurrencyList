@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,26 +28,26 @@ import com.nhatbui.common.ui.theme.CurrencyTheme
 import com.nhatbui.currency.presentation.CurrencyViewModel
 import com.nhatbui.currency.presentation.model.CurrencyPresentationState
 import com.nhatbui.currency.presentation.model.CurrencyRequestPresentationModel
-import com.nhatbui.currency.ui.mapper.CurrencyPresentationToUiMapper
+import com.nhatbui.currency.ui.di.CurrencyDependencies
 import com.nhatbui.currency.ui.model.CurrencyUiModel
 import com.nhatbui.currency.ui.model.CurrencyUiModel.Crypto
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun CurrencyScreen() = Screen<CurrencyPresentationState, CurrencyViewModel> {
-    val currencyUiMapper = remember { CurrencyPresentationToUiMapper() }
-    LaunchedEffect(Unit) {
-        viewModel.insertCurrencies()
-        viewModel.getCurrencies(CurrencyRequestPresentationModel.All)
+internal fun CurrencyDependencies.CurrencyScreen() =
+    Screen<CurrencyPresentationState, CurrencyViewModel> {
+        LaunchedEffect(Unit) {
+            viewModel.insertCurrencies()
+            viewModel.getCurrencies(CurrencyRequestPresentationModel.All)
+        }
+        Content { viewState ->
+            val currencies = viewState.currencies.map(currencyPresentationToUiMapper::map)
+            CurrencyScreenContent(
+                currencies = currencies.toImmutableList()
+            )
+        }
     }
-    Content { viewState ->
-        val currencies = viewState.currencies.map(currencyUiMapper::map)
-        CurrencyScreenContent(
-            currencies = currencies.toImmutableList()
-        )
-    }
-}
 
 @Composable
 private fun CurrencyScreenContent(

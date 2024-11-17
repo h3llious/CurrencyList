@@ -7,8 +7,15 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.nhatbui.common.ui.theme.CurrencyTheme
+import com.nhatbui.currency.ui.di.NavHostDependencies
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CurrencyListFragment : Fragment() {
+    @Inject
+    lateinit var navHostDependencies: NavHostDependencies
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -18,7 +25,7 @@ class CurrencyListFragment : Fragment() {
             CurrencyTheme(
                 dynamicColor = false
             ) {
-                FeatureContent()
+                FeatureContent(navHostDependencies)
             }
         }
     }

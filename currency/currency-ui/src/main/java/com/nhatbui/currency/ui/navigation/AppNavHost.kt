@@ -5,9 +5,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nhatbui.currency.ui.CurrencyScreen
+import com.nhatbui.currency.ui.di.NavHostDependencies
 
 @Composable
-internal fun AppNavHost(
+internal fun NavHostDependencies.AppNavHost(
     navHostController: NavHostController
 ) {
     NavHost(
@@ -15,7 +16,7 @@ internal fun AppNavHost(
         startDestination = Route.Currency
     ) {
         composable<Route.Currency> {
-            CurrencyScreen()
+            currencyDependencies.CurrencyScreen()
         }
     }
 }
