@@ -1,5 +1,8 @@
 package com.nhatbui.currency.ui.composable
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,15 +30,48 @@ import com.nhatbui.currency.ui.model.CurrencyTypeUiModel
 @Composable
 fun Header(
     currencyType: CurrencyTypeUiModel,
+    isSearching: Boolean,
     onFilterClick: () -> Unit,
     onSearchClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onSearchCancel: () -> Unit,
+    onSearching: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AnimatedVisibility(!isSearching) {
+                TitleWithAction(currencyType, onSearchClick)
+            }
+            AnimatedVisibility(
+                visible = isSearching,
+                enter = fadeIn() + expandHorizontally(expandFrom = Alignment.Start)
+            ) {
+                SearchBar(
+                    onBackAction = onSearchCancel,
+                    onValueChange = onSearching
+                )
+            }
+        }
+        Spacer(Modifier.width(5.dp))
+        FilterIcon(onFilterClick = onFilterClick)
+        SettingsIcon(onSettingsClick = onSettingsClick)
+    }
+}
+
+@Composable
+private fun TitleWithAction(
+    currencyType: CurrencyTypeUiModel,
+    onSearchClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = stringResource(currencyType.name),
@@ -45,9 +81,6 @@ fun Header(
             )
         }
         SearchIcon(onSearchClick = onSearchClick)
-        Spacer(Modifier.width(5.dp))
-        FilterIcon(onFilterClick = onFilterClick)
-        SettingsIcon(onSettingsClick = onSettingsClick)
     }
 }
 
