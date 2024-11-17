@@ -1,5 +1,6 @@
 package com.nhatbui.currencylist.di
 
+import com.google.gson.Gson
 import com.nhatbui.common.domain.CoroutineContextProvider
 import com.nhatbui.common.domain.UseCaseExecutor
 import com.nhatbui.common.domain.UseCaseExecutorProvider
@@ -18,4 +19,7 @@ object CommonModule {
     @Provides
     fun providesUseCaseExecutorProvider(): UseCaseExecutorProvider =
         { coroutineScope -> UseCaseExecutor(coroutineScope) }
+
+    @Provides
+    fun providesGson(): Gson = Gson()
 }

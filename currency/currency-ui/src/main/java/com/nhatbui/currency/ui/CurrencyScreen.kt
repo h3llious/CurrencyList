@@ -18,6 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,17 +28,24 @@ import com.nhatbui.common.ui.component.Screen
 import com.nhatbui.common.ui.theme.CurrencyTheme
 import com.nhatbui.currency.presentation.CurrencyViewModel
 import com.nhatbui.currency.presentation.model.CurrencyPresentationState
+import com.nhatbui.currency.presentation.model.CurrencyRequestPresentationModel
+import com.nhatbui.currency.ui.mapper.CurrencyPresentationToUiMapper
 import com.nhatbui.currency.ui.model.CurrencyUiModel
 import com.nhatbui.currency.ui.model.CurrencyUiModel.Crypto
-import com.nhatbui.currency.ui.model.CurrencyUiModel.Fiat
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun CurrencyScreen() = Screen<CurrencyPresentationState, CurrencyViewModel> {
+    val currencyUiMapper = remember { CurrencyPresentationToUiMapper() }
+    LaunchedEffect(Unit) {
+        viewModel.insertCurrencies()
+        viewModel.getCurrencies(CurrencyRequestPresentationModel.All)
+    }
     Content { viewState ->
+        val currencies = viewState.currencies.map(currencyUiMapper::map)
         CurrencyScreenContent(
-            currencies = placeholderCurrencies().toImmutableList()
+            currencies = currencies.toImmutableList()
         )
     }
 }
@@ -109,18 +118,3 @@ private fun CurrencyItem(item: CurrencyUiModel, modifier: Modifier = Modifier) {
         }
     }
 }
-
-private fun placeholderCurrencies() = listOf(
-    Crypto(id = "BTC", name = "Bitcoin", symbol = "BTC", iconInitial = "B"),
-    Crypto(id = "ETH", name = "Ethereum", symbol = "ETH", iconInitial = "E"),
-    Crypto(id = "XRP", name = "XRP", symbol = "XRP", iconInitial = "X"),
-    Crypto(id = "BCH", name = "Bitcoin Cash", symbol = "BCH", iconInitial = "B"),
-    Crypto(id = "LTC", name = "Litecoin", symbol = "LTC", iconInitial = "L"),
-    Fiat(id = "SGD", name = "Singapore Dollar", symbol = "$", code = "SGD", iconInitial = "S"),
-    Fiat(id = "EUR", name = "Euro", symbol = "€", code = "EUR", iconInitial = "E"),
-    Fiat(id = "GBP", name = "British Pound", symbol = "£", code = "GBP", iconInitial = "B"),
-    Fiat(id = "HKD", name = "Hong Kong Dollar", symbol = "$", code = "HKD", iconInitial = "H"),
-    Fiat(id = "JPY", name = "Japanese Yen", symbol = "¥", code = "JPY", iconInitial = "J"),
-    Fiat(id = "AUD", name = "Australian Dollar", symbol = "$", code = "AUD", iconInitial = "A"),
-    Fiat(id = "USD", name = "United States Dollar", symbol = "$", code = "USD", iconInitial = "U")
-)

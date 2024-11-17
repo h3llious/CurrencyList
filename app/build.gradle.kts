@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.currencylist.hilt.library)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -48,12 +49,19 @@ dependencies {
     implementation(projects.currency.currencyData)
 
     implementation(projects.common.commonDomain)
+    implementation(projects.common.commonData)
 
     // Navigation
     implementation(libs.navigation.fragment.ktx)
 
+    // Room
+    ksp(libs.room.compiler)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.appcompat)
+    implementation(libs.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

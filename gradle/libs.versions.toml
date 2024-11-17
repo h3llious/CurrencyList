@@ -18,6 +18,8 @@ lifecycle = "2.8.7"
 android-navigation = "2.8.4"
 kotlinx-serialization = "1.7.3"
 kotlinx-collections-immutable = "0.3.7"
+room = "2.6.1"
+gson = "2.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +49,10 @@ compose-navigation = { module = "androidx.navigation:navigation-compose", versio
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "android-navigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
