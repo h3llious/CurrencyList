@@ -72,6 +72,7 @@ internal fun SearchBar(
                         onBackAction()
                     } else {
                         input = TextFieldValue("")
+                        onValueChange(input.text)
                     }
                 }
                 .padding(6.dp)

@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -35,7 +36,6 @@ import com.nhatbui.common.ui.component.Screen
 import com.nhatbui.common.ui.theme.CurrencyTheme
 import com.nhatbui.currency.presentation.CurrencyViewModel
 import com.nhatbui.currency.presentation.model.CurrencyPresentationState
-import com.nhatbui.currency.presentation.model.CurrencyTypePresentationModel
 import com.nhatbui.currency.ui.composable.FilterBottomSheet
 import com.nhatbui.currency.ui.composable.Header
 import com.nhatbui.currency.ui.composable.SearchBar
@@ -48,7 +48,13 @@ import com.nhatbui.currency.ui.model.toPresentation
 import com.nhatbui.currency.ui.model.toUi
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 
+private const val QUERY_DEBOUNCE_TIME = 200L
+
+@OptIn(FlowPreview::class)
 @Composable
 internal fun CurrencyDependencies.CurrencyScreen() =
     Screen<CurrencyPresentationState, CurrencyViewModel> {
@@ -56,10 +62,17 @@ internal fun CurrencyDependencies.CurrencyScreen() =
         var showSettingsBottomSheet by remember { mutableStateOf(false) }
         var showSearchBar by remember { mutableStateOf(false) }
         var searchText by remember { mutableStateOf("") }
-        LaunchedEffect(Unit) {
-            viewModel.getCurrencies(CurrencyTypePresentationModel.All)
-        }
         Content { viewState ->
+            LaunchedEffect(Unit) {
+                viewModel.getCurrencies(viewState.currencyType, searchText)
+            }
+            LaunchedEffect(searchText) {
+                snapshotFlow { searchText }
+                    .debounce(QUERY_DEBOUNCE_TIME)
+                    .collectLatest { query ->
+                        viewModel.getCurrencies(viewState.currencyType, query)
+                    }
+            }
             val currencies = remember(viewState.currencies) {
                 viewState.currencies.map(currencyPresentationToUiMapper::map)
             }
@@ -83,7 +96,7 @@ internal fun CurrencyDependencies.CurrencyScreen() =
                 shouldShowBottomSheet = showFilterBottomSheet,
                 onDismiss = { showFilterBottomSheet = false },
                 onSelectType = { type ->
-                    viewModel.getCurrencies(type.toPresentation())
+                    viewModel.getCurrencies(type.toPresentation(), searchText)
                 },
                 currentSelectedType = currencyType
             )

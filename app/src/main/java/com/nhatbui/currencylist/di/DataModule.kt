@@ -10,6 +10,7 @@ import com.nhatbui.currency.data.local.CurrencyDao
 import com.nhatbui.currency.data.local.CurrencyDatabase
 import com.nhatbui.currency.data.local.DATABASE_NAME
 import com.nhatbui.currency.data.mapper.CurrencyDataModelToDomainMapper
+import com.nhatbui.currency.data.mapper.CurrencySearchContentResolver
 import com.nhatbui.currency.data.model.CurrencyDataModel
 import com.nhatbui.currency.data.repository.CurrencyRepositoryImpl
 import com.nhatbui.currency.domain.repository.CurrencyRepository
@@ -50,15 +51,20 @@ object DataModule {
     fun providesCurrencyDataModelToDomainMapper() = CurrencyDataModelToDomainMapper()
 
     @Provides
+    fun providesCurrencySearchContentResolver() = CurrencySearchContentResolver()
+
+    @Provides
     fun providesCurrencyRepository(
         currencyDao: CurrencyDao,
         assetToDataMapper: AssetToDataMapper<List<CurrencyDataModel>>,
         currencyDataModelToDomainMapper: CurrencyDataModelToDomainMapper,
+        currencySearchContentResolver: CurrencySearchContentResolver,
         coroutineContextProvider: CoroutineContextProvider
     ): CurrencyRepository = CurrencyRepositoryImpl(
         currencyDao,
         assetToDataMapper,
         currencyDataModelToDomainMapper,
+        currencySearchContentResolver,
         coroutineContextProvider
     )
 }

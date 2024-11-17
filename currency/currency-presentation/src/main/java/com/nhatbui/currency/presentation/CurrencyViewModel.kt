@@ -4,6 +4,7 @@ import com.nhatbui.common.domain.UseCaseExecutorProvider
 import com.nhatbui.common.presentation.BaseViewModel
 import com.nhatbui.currency.domain.model.CurrenciesDomainException.EmptyCurrenciesDomainException
 import com.nhatbui.currency.domain.model.CurrencyDomainModel
+import com.nhatbui.currency.domain.model.CurrencyRequestDomainModel
 import com.nhatbui.currency.domain.usecase.ClearCurrenciesUseCase
 import com.nhatbui.currency.domain.usecase.GetCurrenciesUseCase
 import com.nhatbui.currency.domain.usecase.InsertCurrenciesUseCase
@@ -57,17 +58,18 @@ class CurrencyViewModel @Inject constructor(
         )
     }
 
-    fun getCurrencies(request: CurrencyTypePresentationModel) {
+    fun getCurrencies(type: CurrencyTypePresentationModel, searchContent: String) {
         getCurrenciesJob?.cancel()
         getCurrenciesJob = getCurrenciesUseCase.start(
-            value = request.toDomain(),
+            value = CurrencyRequestDomainModel(
+                type = type.toDomain(),
+                query = searchContent
+            ),
             onResult = { currencies ->
                 updateState { lastState ->
                     lastState.copy(
-                        currencies = currencies.map(
-                            CurrencyDomainModel::toPresentation
-                        ),
-                        currencyType = request
+                        currencies = currencies.map(CurrencyDomainModel::toPresentation),
+                        currencyType = type
                     )
                 }
             }
