@@ -16,3 +16,9 @@ fun CurrencyTypePresentationModel.toDomain() = when (this) {
     Crypto -> CurrencyTypeDomainModel.Crypto
     Fiat -> CurrencyTypeDomainModel.Fiat
 }
+
+fun CurrencyTypeDomainModel.toPresentation() = when (this) {
+    CurrencyTypeDomainModel.All -> All
+    CurrencyTypeDomainModel.Crypto -> Crypto
+    CurrencyTypeDomainModel.Fiat -> Fiat
+}

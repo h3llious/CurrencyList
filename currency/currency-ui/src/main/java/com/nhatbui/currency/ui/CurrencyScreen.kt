@@ -34,10 +34,11 @@ import com.nhatbui.common.presentation.model.ErrorResponseEvent
 import com.nhatbui.common.ui.component.Screen
 import com.nhatbui.common.ui.theme.CurrencyTheme
 import com.nhatbui.currency.presentation.CurrencyViewModel
-import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.CurrenciesInserted
-import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.CurrenciesCleared
-import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.ClearFailedEmptyCurrencies
 import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.ClearFailed
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.ClearFailedEmptyCurrencies
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.CurrenciesCleared
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.CurrenciesInserted
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.FilterPreferenceUpdated
 import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.InsertFailed
 import com.nhatbui.currency.presentation.model.CurrencyPresentationState
 import com.nhatbui.currency.ui.composable.CurrencyItem
@@ -73,13 +74,16 @@ internal fun CurrencyDependencies.CurrencyScreen() =
         var showSearchBar by remember { mutableStateOf(false) }
         var searchText by remember { mutableStateOf("") }
         ObserveViewModelEvents { event ->
-            handleEvents(event, scope, context, snackbarHostState)
+            when (event) {
+                is FilterPreferenceUpdated -> viewModel.getCurrencies(event.type, searchText)
+                else -> handleEvents(event, scope, context, snackbarHostState)
+            }
         }
         Content { viewState ->
             LaunchedEffect(Unit) {
-                viewModel.getCurrencies(viewState.currencyType, searchText)
+                viewModel.fetchFilterPreference()
             }
-            LaunchedEffect(searchText) {
+            LaunchedEffect(searchText, viewState.currencyType) {
                 snapshotFlow { searchText }
                     .debounce(QUERY_DEBOUNCE_TIME)
                     .collectLatest { query ->
@@ -119,7 +123,7 @@ internal fun CurrencyDependencies.CurrencyScreen() =
                 shouldShowBottomSheet = showFilterBottomSheet,
                 onDismiss = { showFilterBottomSheet = false },
                 onSelectType = { type ->
-                    viewModel.getCurrencies(type.toPresentation(), searchText)
+                    viewModel.onUpdateFilter(type.toPresentation())
                 },
                 currentSelectedType = currencyType
             )

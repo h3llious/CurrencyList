@@ -8,4 +8,7 @@ sealed class CurrencyPresentationEvent: PresentationEvent {
     data object CurrenciesCleared: CurrencyPresentationEvent()
     data object ClearFailed: CurrencyPresentationEvent()
     data object ClearFailedEmptyCurrencies: CurrencyPresentationEvent()
+    data class FilterPreferenceUpdated(
+        val type: CurrencyTypePresentationModel
+    ): CurrencyPresentationEvent()
 }

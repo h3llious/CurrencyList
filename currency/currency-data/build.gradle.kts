@@ -19,6 +19,7 @@ dependencies {
     implementation(libs.room.ktx)
 
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.datastore.preferences)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockito.kotlin)
