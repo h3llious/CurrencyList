@@ -20,6 +20,9 @@ kotlinx-serialization = "1.7.3"
 kotlinx-collections-immutable = "0.3.7"
 room = "2.6.1"
 gson = "2.11.0"
+mockito-inline = "5.2.0"
+mockito-kotlin = "5.4.0"
+core-testing = "2.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +56,10 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito-inline" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-android" }
+architecture-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core-testing" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

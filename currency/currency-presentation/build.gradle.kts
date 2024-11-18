@@ -12,5 +12,10 @@ dependencies {
     implementation(projects.common.commonPresentation)
     implementation(projects.common.commonDomain)
 
+    testImplementation(projects.common.unitTest)
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
