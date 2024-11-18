@@ -1,7 +1,6 @@
 package com.nhatbui.currency.ui
 
-import android.util.Log
-import androidx.compose.foundation.layout.Box
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,29 +11,39 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.nhatbui.common.presentation.PresentationEvent
+import com.nhatbui.common.presentation.model.ErrorResponseEvent
 import com.nhatbui.common.ui.component.Screen
 import com.nhatbui.common.ui.theme.CurrencyTheme
 import com.nhatbui.currency.presentation.CurrencyViewModel
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.CurrenciesInserted
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.CurrenciesCleared
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.ClearFailedEmptyCurrencies
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.ClearFailed
+import com.nhatbui.currency.presentation.model.CurrencyPresentationEvent.InsertFailed
 import com.nhatbui.currency.presentation.model.CurrencyPresentationState
 import com.nhatbui.currency.ui.composable.CurrencyItem
 import com.nhatbui.currency.ui.composable.FilterBottomSheet
 import com.nhatbui.currency.ui.composable.Header
+import com.nhatbui.currency.ui.composable.LocalSnackbarHostState
 import com.nhatbui.currency.ui.composable.SettingsBottomSheet
 import com.nhatbui.currency.ui.di.CurrencyDependencies
 import com.nhatbui.currency.ui.model.CurrencyTypeUiModel
@@ -44,9 +53,11 @@ import com.nhatbui.currency.ui.model.toPresentation
 import com.nhatbui.currency.ui.model.toUi
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 
 private const val QUERY_DEBOUNCE_TIME = 200L
 
@@ -54,10 +65,16 @@ private const val QUERY_DEBOUNCE_TIME = 200L
 @Composable
 internal fun CurrencyDependencies.CurrencyScreen() =
     Screen<CurrencyPresentationState, CurrencyViewModel> {
+        val snackbarHostState = LocalSnackbarHostState.current
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
         var showFilterBottomSheet by remember { mutableStateOf(false) }
         var showSettingsBottomSheet by remember { mutableStateOf(false) }
         var showSearchBar by remember { mutableStateOf(false) }
         var searchText by remember { mutableStateOf("") }
+        ObserveViewModelEvents { event ->
+            handleEvents(event, scope, context, snackbarHostState)
+        }
         Content { viewState ->
             LaunchedEffect(Unit) {
                 viewModel.getCurrencies(viewState.currencyType, searchText)
@@ -200,4 +217,48 @@ private fun EmptyView(
             }
         }
     }
+}
+
+private fun handleEvents(
+    event: PresentationEvent,
+    scope: CoroutineScope,
+    context: Context,
+    snackbarHostState: SnackbarHostState
+) {
+    scope.launch {
+        when (event) {
+            CurrenciesInserted -> {
+                snackbarHostState.showSnackbarMessage(context.getString(R.string.insert_currencies_success_message))
+            }
+
+            CurrenciesCleared -> {
+                snackbarHostState.showSnackbarMessage(context.getString(R.string.clear_currencies_success_message))
+            }
+
+            ClearFailedEmptyCurrencies -> {
+                snackbarHostState.showSnackbarMessage(context.getString(R.string.clear_currencies_failed_no_currencies_message))
+            }
+
+            is ErrorResponseEvent -> {
+                snackbarHostState.showSnackbarMessage(
+                    context.getString(
+                        R.string.error_message_with_cause,
+                        event.cause?.message ?: ""
+                    )
+                )
+            }
+
+            InsertFailed, ClearFailed -> {
+                snackbarHostState.showSnackbarMessage(context.getString(R.string.generic_error_message))
+            }
+
+            else -> {
+                snackbarHostState.showSnackbarMessage(context.getString(R.string.unknown_message))
+            }
+        }
+    }
+}
+
+private suspend fun SnackbarHostState.showSnackbarMessage(message: String) {
+    showSnackbar(message, withDismissAction = true)
 }

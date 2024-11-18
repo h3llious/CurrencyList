@@ -11,6 +11,12 @@
     <string name="empty_search_text_suggestion_fiat">Try \"Dollar\"</string>
     <string name="empty_currencies_text_description">No currencies</string>
     <string name="empty_currencies_text_suggestion">Let\'s insert more</string>
+    <string name="insert_currencies_success_message">Currencies inserted</string>
+    <string name="clear_currencies_success_message">Currencies cleared</string>
+    <string name="clear_currencies_failed_no_currencies_message">There are no currencies to clear</string>
+    <string name="error_message_with_cause">Something went wrong: %s</string>
+    <string name="generic_error_message">Something went wrong</string>
+    <string name="unknown_message">Unknown</string>
 
     <string name="right_arrow_content_description">Right arrow</string>
     <string name="selected_content_description">Selected</string>
